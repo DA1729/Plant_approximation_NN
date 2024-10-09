@@ -1,0 +1,51 @@
+clear, clc
+% the chosen plant G(s) = 133/(s^2 + 25s)
+f = @(t) 133/25 - (3325*cos(t))/626 - (133*sin(t))/626 - (133*exp(-25*t))/15650;
+
+alpha = 0.05; 
+eta = 0.5; 
+
+w = rand(5, 1); % randomly initialized weights matrix
+
+c = [-1 -10; -5 -0.5; 0 0; 0.5 5; 1 10]; % centre matrix for all the rows
+b = [1.5; 1.5; 1.5; 1.5; 1.5]; % the bandwidth matrix
+
+u = @(t) sin(t);
+
+dt = 0.001; % time step
+
+for i = 1: 200
+    time = (i-1)*dt; 
+
+    % input vector
+    x = [u(time) y(time)];
+
+    % the output of the hidden layer
+    for j = 1:5
+        norm_sq = norm(x - c(j, 1:2))^2;
+        h(j) = exp(-(norm_sq)/(2*(b(j))^2)); 
+    end
+
+    h = h';
+
+    y_m = sum(w.*h);
+
+    E = 0.5*(y(time) - y_m)^2; % performance index
+
+    for j = 1:5
+        del_w(j) = eta*(y(time) - y_m)*h(j);
+
+        w(j) = w(j) + del_w(j);
+    end
+    
+
+
+
+
+
+    
+
+
+
+end
+
